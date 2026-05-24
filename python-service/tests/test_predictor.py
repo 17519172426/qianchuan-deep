@@ -11,7 +11,7 @@ class TestROIPredictor:
         result = predictor.predict(1, history)
         assert result is not None
         assert result.trend == "up"
-        assert result.predicted_roi_24h > 1.8
+        assert result.predicted_roi_24h > 2.0
 
     def test_predict_downward_trend(self):
         predictor = ROIPredictor()
