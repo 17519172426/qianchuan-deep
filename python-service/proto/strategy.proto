@@ -1,0 +1,60 @@
+syntax = "proto3";
+
+package strategy;
+
+option go_package = "github.com/example/qianchuan-saas/grpc/strategy";
+
+service StrategyService {
+  rpc EvaluateRules(EvaluateRequest) returns (EvaluateResponse);
+  rpc TestRule(TestRuleRequest) returns (TestRuleResponse);
+}
+
+message RuleDef {
+  int64 id = 1;
+  string name = 2;
+  int64 account_id = 3;
+  string scope_json = 4;
+  string condition_json = 5;
+  string action_json = 6;
+  string schedule = 7;
+  string cooldown = 8;
+}
+
+message EvaluateRequest {
+  repeated RuleDef rules = 1;
+  repeated AdContext ads = 2;
+}
+
+message AdContext {
+  int64 ad_id = 1;
+  int64 qianchuan_ad_id = 2;
+  double cost = 3;
+  double roi = 4;
+  double ctr = 5;
+  int64 conversions = 6;
+  int64 impressions = 7;
+}
+
+message RuleAction {
+  int64 rule_id = 1;
+  int64 ad_id = 2;
+  string action_type = 3;
+  double value = 4;
+  string value_type = 5;
+  string reason = 6;
+}
+
+message EvaluateResponse {
+  repeated RuleAction actions = 1;
+}
+
+message TestRuleRequest {
+  RuleDef rule = 1;
+  repeated AdContext ads = 2;
+}
+
+message TestRuleResponse {
+  repeated RuleAction actions = 1;
+  bool would_trigger = 2;
+  string trigger_reason = 3;
+}
