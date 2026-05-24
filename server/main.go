@@ -27,6 +27,7 @@ func main() {
 		&models.Rule{},
 		&models.RuleExecution{},
 		&models.AIRecommendation{},
+		&models.UniAdReport{},
 	)
 	log.Println("database connected and migrated")
 
