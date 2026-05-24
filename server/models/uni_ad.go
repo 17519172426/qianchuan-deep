@@ -34,5 +34,6 @@ type UniAd struct {
 	Status          string    `gorm:"size:32;default:create" json:"status"`
 	MetricsJSON     JSONMap   `gorm:"type:jsonb;default:'{}'" json:"metrics_json"`
 	CreatedAt       time.Time `json:"created_at"`
-	UpdatedAt       time.Time `json:"updated_at"`
+	UpdatedAt       time.Time         `json:"updated_at"`
+	Account         QianchuanAccount  `gorm:"foreignKey:AccountID" json:"account,omitempty"`
 }

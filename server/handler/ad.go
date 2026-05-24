@@ -130,5 +130,6 @@ func (h *AdHandler) UpdateStatus(c *gin.Context) {
 		}
 	}
 	db.DB.Model(&ad).Update("status", req.Status)
+	ad.Status = req.Status
 	c.JSON(http.StatusOK, ad)
 }
