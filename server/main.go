@@ -10,6 +10,7 @@ import (
 	"github.com/example/qianchuan-saas/models"
 	"github.com/example/qianchuan-saas/qianchuan"
 	"github.com/example/qianchuan-saas/router"
+	"github.com/example/qianchuan-saas/worker"
 )
 
 func main() {
@@ -30,6 +31,9 @@ func main() {
 	log.Println("database connected and migrated")
 
 	qc := qianchuan.NewClient(cfg.QianchuanAppID, cfg.QianchuanSecret)
+
+	syncWorker := worker.NewSyncWorker(qc)
+	syncWorker.Start()
 
 	r := router.Setup(qc)
 
