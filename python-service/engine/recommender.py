@@ -64,6 +64,8 @@ class RecommendationEngine:
                     "suggested_action_json": f'{{"type":"{budget_rec.action}","value":{budget_rec.value},"value_type":"{budget_rec.value_type}"}}',
                 })
 
+            if not metrics:
+                continue
             anomaly_results = self.anomaly_detector.detect([metrics], [history])
             for a in anomaly_results:
                 results.append({

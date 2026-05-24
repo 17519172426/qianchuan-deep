@@ -1,4 +1,3 @@
-import json
 from strategy_pb import strategy_pb2, strategy_pb2_grpc
 from engine.evaluator import RuleEvaluator
 from engine.actions import ActionResolver
