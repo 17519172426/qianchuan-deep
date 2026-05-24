@@ -14,7 +14,7 @@ type CreativeHandler struct{}
 func (h *CreativeHandler) List(c *gin.Context) {
 	accountID := c.Query("account_id")
 	var creatives []models.Creative
-	q := db.DB.Order("created_at DESC")
+	q := db.DB.Order("created_at DESC").Limit(50)
 	if accountID != "" {
 		q = q.Where("account_id = ?", accountID)
 	}
