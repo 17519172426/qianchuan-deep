@@ -23,6 +23,7 @@ func Setup(qc *qianchuan.Client) *gin.Engine {
 	adH := &handler.AdHandler{QC: qc}
 	dashH := &handler.DashboardHandler{}
 	reportH := &handler.ReportHandler{}
+	ruleH := &handler.RuleHandler{}
 
 	api := r.Group("/api")
 	{
@@ -46,6 +47,13 @@ func Setup(qc *qianchuan.Client) *gin.Engine {
 
 			authorized.GET("/reports/ads/:id", reportH.ByAd)
 			authorized.GET("/reports/summary", reportH.SummaryByDate)
+
+			authorized.GET("/rules/executions", ruleH.Executions)
+			authorized.GET("/rules", ruleH.List)
+			authorized.POST("/rules", ruleH.Create)
+			authorized.GET("/rules/:id", ruleH.Get)
+			authorized.PUT("/rules/:id", ruleH.Update)
+			authorized.DELETE("/rules/:id", ruleH.Delete)
 		}
 	}
 
