@@ -45,7 +45,11 @@ func (h *AccountHandler) Create(c *gin.Context) {
 }
 
 func (h *AccountHandler) Get(c *gin.Context) {
-	id, _ := strconv.Atoi(c.Param("id"))
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid id"})
+		return
+	}
 	var account models.QianchuanAccount
 	if err := db.DB.First(&account, id).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "account not found"})
@@ -55,7 +59,14 @@ func (h *AccountHandler) Get(c *gin.Context) {
 }
 
 func (h *AccountHandler) Delete(c *gin.Context) {
-	id, _ := strconv.Atoi(c.Param("id"))
-	db.DB.Delete(&models.QianchuanAccount{}, id)
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid id"})
+		return
+	}
+	if result := db.DB.Delete(&models.QianchuanAccount{}, id); result.RowsAffected == 0 {
+		c.JSON(http.StatusNotFound, gin.H{"error": "account not found"})
+		return
+	}
 	c.JSON(http.StatusNoContent, nil)
 }
