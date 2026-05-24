@@ -4,6 +4,8 @@ import Dashboard from './pages/Dashboard'
 import Ads from './pages/Ads'
 import Rules from './pages/Rules'
 import Recommendations from './pages/Recommendations'
+import Creatives from './pages/Creatives'
+import Reports from './pages/Reports'
 import Layout from './components/Layout'
 
 function App() {
@@ -16,6 +18,8 @@ function App() {
         <Route path="/ads" element={<Ads />} />
         <Route path="/rules" element={<Rules />} />
         <Route path="/recommendations" element={<Recommendations />} />
+        <Route path="/creatives" element={<Creatives />} />
+        <Route path="/reports" element={<Reports />} />
       </Route>
     </Routes>
   )

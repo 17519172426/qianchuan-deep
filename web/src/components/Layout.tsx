@@ -6,6 +6,8 @@ import {
   UnorderedListOutlined,
   SettingOutlined,
   BulbOutlined,
+  PictureOutlined,
+  BarChartOutlined,
   LogoutOutlined,
 } from '@ant-design/icons'
 
@@ -16,6 +18,8 @@ const menuItems = [
   { key: '/ads', icon: <UnorderedListOutlined />, label: '全域计划' },
   { key: '/rules', icon: <SettingOutlined />, label: '规则管理' },
   { key: '/recommendations', icon: <BulbOutlined />, label: 'AI 推荐' },
+  { key: '/creatives', icon: <PictureOutlined />, label: '素材库' },
+  { key: '/reports', icon: <BarChartOutlined />, label: '数据报表' },
 ]
 
 export default function Layout() {

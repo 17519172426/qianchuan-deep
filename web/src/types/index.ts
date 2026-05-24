@@ -97,6 +97,19 @@ export interface RuleExecution {
   executed_at: string | null
 }
 
+export interface Creative {
+  id: number
+  account_id: number
+  name: string
+  type: string
+  url: string
+  file_size: number
+  duration: number
+  tags: Record<string, unknown>
+  metrics_json: Record<string, unknown>
+  created_at: string
+}
+
 export interface AIRecommendation {
   id: number
   uni_ad_id: number | null
