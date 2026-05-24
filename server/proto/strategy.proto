@@ -7,6 +7,9 @@ option go_package = "github.com/example/qianchuan-saas/grpc/strategy";
 service StrategyService {
   rpc EvaluateRules(EvaluateRequest) returns (EvaluateResponse);
   rpc TestRule(TestRuleRequest) returns (TestRuleResponse);
+  rpc DetectAnomalies(AnomalyRequest) returns (AnomalyResponse);
+  rpc PredictROI(PredictRequest) returns (PredictResponse);
+  rpc GenerateRecommendations(RecRequest) returns (RecResponse);
 }
 
 message RuleDef {
@@ -57,4 +60,72 @@ message TestRuleResponse {
   repeated RuleAction actions = 1;
   bool would_trigger = 2;
   string trigger_reason = 3;
+}
+
+message AdMetrics {
+  int64 ad_id = 1;
+  double cost = 2;
+  double roi = 3;
+  double ctr = 4;
+  int64 conversions = 5;
+  int64 impressions = 6;
+  double cpa = 7;
+}
+
+message MetricsWindow {
+  repeated AdMetrics hourly = 1;
+}
+
+message AnomalyRequest {
+  repeated AdMetrics current = 1;
+  repeated MetricsWindow history = 2;
+}
+
+message Anomaly {
+  int64 ad_id = 1;
+  string metric_name = 2;
+  double current_value = 3;
+  double mean_value = 4;
+  double std_value = 5;
+  double z_score = 6;
+  string severity = 7;
+}
+
+message AnomalyResponse {
+  repeated Anomaly anomalies = 1;
+}
+
+message PredictRequest {
+  int64 ad_id = 1;
+  repeated AdMetrics history_7d = 2;
+}
+
+message ROIPrediction {
+  int64 ad_id = 1;
+  double predicted_roi_24h = 2;
+  double confidence = 3;
+  string trend = 4;
+}
+
+message PredictResponse {
+  repeated ROIPrediction predictions = 1;
+}
+
+message RecRequest {
+  repeated int64 ad_ids = 1;
+  repeated AdMetrics current_metrics = 2;
+  repeated MetricsWindow history_7d = 3;
+}
+
+message Recommendation {
+  int64 ad_id = 1;
+  string type = 2;
+  string title = 3;
+  string description = 4;
+  double confidence = 5;
+  string suggested_action_json = 6;
+}
+
+message RecResponse {
+  repeated Recommendation recommendations = 1;
 }

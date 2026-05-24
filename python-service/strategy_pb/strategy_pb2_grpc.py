@@ -3,7 +3,7 @@
 import grpc
 import warnings
 
-from strategy_pb import strategy_pb2 as strategy__pb2
+import strategy_pb2 as strategy__pb2
 
 GRPC_GENERATED_VERSION = '1.66.0'
 GRPC_VERSION = grpc.__version__
@@ -44,6 +44,21 @@ class StrategyServiceStub(object):
                 request_serializer=strategy__pb2.TestRuleRequest.SerializeToString,
                 response_deserializer=strategy__pb2.TestRuleResponse.FromString,
                 _registered_method=True)
+        self.DetectAnomalies = channel.unary_unary(
+                '/strategy.StrategyService/DetectAnomalies',
+                request_serializer=strategy__pb2.AnomalyRequest.SerializeToString,
+                response_deserializer=strategy__pb2.AnomalyResponse.FromString,
+                _registered_method=True)
+        self.PredictROI = channel.unary_unary(
+                '/strategy.StrategyService/PredictROI',
+                request_serializer=strategy__pb2.PredictRequest.SerializeToString,
+                response_deserializer=strategy__pb2.PredictResponse.FromString,
+                _registered_method=True)
+        self.GenerateRecommendations = channel.unary_unary(
+                '/strategy.StrategyService/GenerateRecommendations',
+                request_serializer=strategy__pb2.RecRequest.SerializeToString,
+                response_deserializer=strategy__pb2.RecResponse.FromString,
+                _registered_method=True)
 
 
 class StrategyServiceServicer(object):
@@ -61,6 +76,24 @@ class StrategyServiceServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def DetectAnomalies(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def PredictROI(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def GenerateRecommendations(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_StrategyServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -73,6 +106,21 @@ def add_StrategyServiceServicer_to_server(servicer, server):
                     servicer.TestRule,
                     request_deserializer=strategy__pb2.TestRuleRequest.FromString,
                     response_serializer=strategy__pb2.TestRuleResponse.SerializeToString,
+            ),
+            'DetectAnomalies': grpc.unary_unary_rpc_method_handler(
+                    servicer.DetectAnomalies,
+                    request_deserializer=strategy__pb2.AnomalyRequest.FromString,
+                    response_serializer=strategy__pb2.AnomalyResponse.SerializeToString,
+            ),
+            'PredictROI': grpc.unary_unary_rpc_method_handler(
+                    servicer.PredictROI,
+                    request_deserializer=strategy__pb2.PredictRequest.FromString,
+                    response_serializer=strategy__pb2.PredictResponse.SerializeToString,
+            ),
+            'GenerateRecommendations': grpc.unary_unary_rpc_method_handler(
+                    servicer.GenerateRecommendations,
+                    request_deserializer=strategy__pb2.RecRequest.FromString,
+                    response_serializer=strategy__pb2.RecResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -129,6 +177,87 @@ class StrategyService(object):
             '/strategy.StrategyService/TestRule',
             strategy__pb2.TestRuleRequest.SerializeToString,
             strategy__pb2.TestRuleResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def DetectAnomalies(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/strategy.StrategyService/DetectAnomalies',
+            strategy__pb2.AnomalyRequest.SerializeToString,
+            strategy__pb2.AnomalyResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def PredictROI(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/strategy.StrategyService/PredictROI',
+            strategy__pb2.PredictRequest.SerializeToString,
+            strategy__pb2.PredictResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def GenerateRecommendations(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/strategy.StrategyService/GenerateRecommendations',
+            strategy__pb2.RecRequest.SerializeToString,
+            strategy__pb2.RecResponse.FromString,
             options,
             channel_credentials,
             insecure,
