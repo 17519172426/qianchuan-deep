@@ -43,6 +43,8 @@ func main() {
 	} else {
 		ruleWorker := worker.NewRuleWorker(qc, grpcClient)
 		ruleWorker.Start()
+		aiWorker := worker.NewAIWorker(grpcClient)
+		aiWorker.Start()
 	}
 
 	r := router.Setup(qc)
