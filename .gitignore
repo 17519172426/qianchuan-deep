@@ -1,0 +1,9 @@
+.env
+server/qianchuan-saas
+*.exe
+.idea/
+.vscode/
+*.swp
+.DS_Store
+Thumbs.db
+vendor/
