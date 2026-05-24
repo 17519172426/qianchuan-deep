@@ -4,6 +4,7 @@ import { Layout as AntLayout, Menu, Button, Typography } from 'antd'
 import {
   DashboardOutlined,
   UnorderedListOutlined,
+  SettingOutlined,
   LogoutOutlined,
 } from '@ant-design/icons'
 
@@ -12,6 +13,7 @@ const { Header, Sider, Content } = AntLayout
 const menuItems = [
   { key: '/dashboard', icon: <DashboardOutlined />, label: '首页看板' },
   { key: '/ads', icon: <UnorderedListOutlined />, label: '全域计划' },
+  { key: '/rules', icon: <SettingOutlined />, label: '规则管理' },
 ]
 
 export default function Layout() {

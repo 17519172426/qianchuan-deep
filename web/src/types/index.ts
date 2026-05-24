@@ -70,3 +70,29 @@ export interface DailySummary {
   conversions: number
   roi: number
 }
+
+export interface Rule {
+  id: number
+  name: string
+  description: string
+  account_id: number
+  scope_json: Record<string, unknown>
+  condition_json: Record<string, unknown>
+  action_json: Record<string, unknown>
+  schedule: string
+  cooldown: string
+  enabled: boolean
+  created_at: string
+}
+
+export interface RuleExecution {
+  id: number
+  rule_id: number
+  uni_ad_id: number
+  triggered_at: string
+  condition_json: Record<string, unknown>
+  action_json: Record<string, unknown>
+  status: string
+  result_json: Record<string, unknown>
+  executed_at: string | null
+}
