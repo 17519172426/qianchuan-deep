@@ -29,7 +29,7 @@ class StrategyServicer(strategy_pb2_grpc.StrategyServiceServicer):
                 cond_result = self.evaluator.evaluate_condition(cond_json, ad_context, rule_id)
                 if not cond_result.matched:
                     continue
-                if self.evaluator.is_in_cooldown(rule_id, ad.ad_id, cooldown):
+                if not self.evaluator.try_trigger(rule_id, ad.ad_id, cooldown):
                     continue
 
                 action_result = self.resolver.resolve(action_json, ad_context, rule_id)
@@ -43,7 +43,6 @@ class StrategyServicer(strategy_pb2_grpc.StrategyServiceServicer):
                         reason=f"{cond_result.description}; {action_result.reason}"
                     )
                     response.actions.append(action)
-                    self.evaluator.mark_triggered(rule_id, ad.ad_id)
         return response
 
     async def TestRule(self, request, context):

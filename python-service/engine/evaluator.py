@@ -1,4 +1,5 @@
 import json
+import threading
 from datetime import datetime, timedelta
 from typing import Optional
 from models import ConditionEvalResult
@@ -9,6 +10,7 @@ SUPPORTED_OPERATORS = {"gt", "lt", "gte", "lte", "eq"}
 class RuleEvaluator:
     def __init__(self, cooldown_store: Optional[dict] = None):
         self._cooldowns = cooldown_store or {}
+        self._lock = threading.Lock()
 
     def evaluate_condition(self, condition_json: str, ad_context: dict, rule_id: int) -> ConditionEvalResult:
         condition = json.loads(condition_json) if isinstance(condition_json, str) else condition_json
@@ -48,8 +50,17 @@ class RuleEvaluator:
         cooldown = self._parse_cooldown(cooldown_str)
         return datetime.utcnow() < last_triggered + cooldown
 
+    def try_trigger(self, rule_id: int, ad_id: int, cooldown_str: str) -> bool:
+        """Atomically check cooldown and mark triggered. Returns True if allowed."""
+        with self._lock:
+            if self.is_in_cooldown(rule_id, ad_id, cooldown_str):
+                return False
+            self._cooldowns[f"{rule_id}:{ad_id}"] = datetime.utcnow()
+            return True
+
     def mark_triggered(self, rule_id: int, ad_id: int):
-        self._cooldowns[f"{rule_id}:{ad_id}"] = datetime.utcnow()
+        with self._lock:
+            self._cooldowns[f"{rule_id}:{ad_id}"] = datetime.utcnow()
 
     def _compare(self, actual: float, operator: str, threshold: float) -> bool:
         ops = {

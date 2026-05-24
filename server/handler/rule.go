@@ -19,7 +19,10 @@ func (h *RuleHandler) List(c *gin.Context) {
 	if accountID != "" {
 		q = q.Where("account_id = ?", accountID)
 	}
-	q.Order("created_at DESC").Find(&rules)
+	if err := q.Order("created_at DESC").Find(&rules).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to fetch rules"})
+		return
+	}
 	c.JSON(http.StatusOK, rules)
 }
 
@@ -58,7 +61,10 @@ func (h *RuleHandler) Create(c *gin.Context) {
 	if rule.ScopeJSON == nil {
 		rule.ScopeJSON = models.JSONMap{}
 	}
-	db.DB.Create(&rule)
+	if err := db.DB.Create(&rule).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to create rule"})
+		return
+	}
 	c.JSON(http.StatusCreated, rule)
 }
 
@@ -126,7 +132,10 @@ func (h *RuleHandler) Update(c *gin.Context) {
 	if req.Enabled != nil {
 		updates["enabled"] = *req.Enabled
 	}
-	db.DB.Model(&rule).Updates(updates)
+	if err := db.DB.Model(&rule).Updates(updates).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to update rule"})
+		return
+	}
 	c.JSON(http.StatusOK, rule)
 }
 
@@ -150,6 +159,9 @@ func (h *RuleHandler) Executions(c *gin.Context) {
 	if ruleID != "" {
 		q = q.Where("rule_id = ?", ruleID)
 	}
-	q.Find(&executions)
+	if err := q.Find(&executions).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to fetch executions"})
+		return
+	}
 	c.JSON(http.StatusOK, executions)
 }

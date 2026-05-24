@@ -93,8 +93,16 @@ func (w *RuleWorker) evaluateAndExecute() {
 
 	for i := range rules {
 		rule := &rules[i]
-		condBytes, _ := json.Marshal(rule.ConditionJSON)
-		actionBytes, _ := json.Marshal(rule.ActionJSON)
+		condBytes, err := json.Marshal(rule.ConditionJSON)
+		if err != nil {
+			log.Printf("marshal condition_json failed for rule %d: %v", rule.ID, err)
+			continue
+		}
+		actionBytes, err := json.Marshal(rule.ActionJSON)
+		if err != nil {
+			log.Printf("marshal action_json failed for rule %d: %v", rule.ID, err)
+			continue
+		}
 		ruleDefs = append(ruleDefs, &pb.RuleDef{
 			Id:            int64(rule.ID),
 			Name:          rule.Name,
@@ -144,10 +152,15 @@ func (w *RuleWorker) evaluateAndExecute() {
 			execErr = w.QC.UpdateUniAdStatus(&accRef, []int64{*ad.QianchuanAdID}, "disable")
 		case "resume_ad":
 			execErr = w.QC.UpdateUniAdStatus(&accRef, []int64{*ad.QianchuanAdID}, "enable")
-		case "update_budget":
-			log.Printf("update_budget action: rule=%d ad=%d value=%.2f", action.RuleId, action.AdId, action.Value)
+		case "update_budget", "update_roi_goal", "raise_ad":
+			execStatus = "skipped"
+			log.Printf("action %s not yet implemented (rule=%d ad=%d value=%.2f)",
+				action.ActionType, action.RuleId, action.AdId, action.Value)
+		case "notify":
+			log.Printf("notify action for rule %d ad %d", action.RuleId, action.AdId)
 		default:
-			log.Printf("action %s (notify-only) for rule %d ad %d", action.ActionType, action.RuleId, action.AdId)
+			execStatus = "skipped"
+			log.Printf("unknown action %s for rule %d ad %d", action.ActionType, action.RuleId, action.AdId)
 		}
 
 		if execErr != nil {
@@ -163,9 +176,16 @@ func (w *RuleWorker) evaluateAndExecute() {
 			Status:        execStatus,
 		}
 		if execErr != nil {
-			execution.ResultJSON = models.JSONMap{"error": execErr.Error()}
+			execution.ResultJSON = models.JSONMap{"error": "external API call failed"}
+			log.Printf("action execution failed: rule=%d ad=%d action=%s err=%v",
+				action.RuleId, action.AdId, action.ActionType, execErr)
 		}
-		db.DB.Create(&execution)
+		if execStatus == "skipped" {
+			execution.ResultJSON = models.JSONMap{"info": "action not yet implemented"}
+		}
+		if err := db.DB.Create(&execution).Error; err != nil {
+			log.Printf("failed to create rule execution record: %v", err)
+		}
 	}
 }
 
