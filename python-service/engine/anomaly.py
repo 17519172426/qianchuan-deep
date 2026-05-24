@@ -1,6 +1,4 @@
-import json
 import math
-from typing import Optional
 from dataclasses import dataclass
 
 METRIC_THRESHOLDS = {
