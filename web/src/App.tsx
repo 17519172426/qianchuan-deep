@@ -3,6 +3,7 @@ import Login from './pages/Login'
 import Dashboard from './pages/Dashboard'
 import Ads from './pages/Ads'
 import Rules from './pages/Rules'
+import Recommendations from './pages/Recommendations'
 import Layout from './components/Layout'
 
 function App() {
@@ -14,6 +15,7 @@ function App() {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/ads" element={<Ads />} />
         <Route path="/rules" element={<Rules />} />
+        <Route path="/recommendations" element={<Recommendations />} />
       </Route>
     </Routes>
   )

@@ -96,3 +96,18 @@ export interface RuleExecution {
   result_json: Record<string, unknown>
   executed_at: string | null
 }
+
+export interface AIRecommendation {
+  id: number
+  uni_ad_id: number | null
+  type: string
+  title: string
+  description: string
+  metrics_json: Record<string, unknown>
+  confidence: number
+  suggested_action: Record<string, unknown>
+  status: string
+  reviewed_by: number | null
+  reviewed_at: string | null
+  created_at: string
+}
