@@ -23,6 +23,9 @@ func Setup(qc *qianchuan.Client) *gin.Engine {
 	adH := &handler.AdHandler{QC: qc}
 	dashH := &handler.DashboardHandler{}
 	reportH := &handler.ReportHandler{}
+	ruleH := &handler.RuleHandler{}
+	recH := &handler.RecommendationHandler{}
+	creativeH := &handler.CreativeHandler{}
 
 	api := r.Group("/api")
 	{
@@ -44,8 +47,22 @@ func Setup(qc *qianchuan.Client) *gin.Engine {
 			authorized.GET("/dashboard/stats", dashH.Stats)
 			authorized.GET("/dashboard/trend", dashH.Trend)
 
+			authorized.GET("/recommendations", recH.List)
+			authorized.PATCH("/recommendations/:id/status", recH.UpdateStatus)
+
+			authorized.GET("/creatives", creativeH.List)
+			authorized.GET("/creatives/:id", creativeH.Get)
+			authorized.PUT("/creatives/:id/tags", creativeH.UpdateTags)
+
 			authorized.GET("/reports/ads/:id", reportH.ByAd)
 			authorized.GET("/reports/summary", reportH.SummaryByDate)
+
+			authorized.GET("/rules/executions", ruleH.Executions)
+			authorized.GET("/rules", ruleH.List)
+			authorized.POST("/rules", ruleH.Create)
+			authorized.GET("/rules/:id", ruleH.Get)
+			authorized.PUT("/rules/:id", ruleH.Update)
+			authorized.DELETE("/rules/:id", ruleH.Delete)
 		}
 	}
 

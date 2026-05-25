@@ -7,6 +7,7 @@ import (
 	"github.com/example/qianchuan-saas/auth"
 	"github.com/example/qianchuan-saas/config"
 	"github.com/example/qianchuan-saas/db"
+	rpc "github.com/example/qianchuan-saas/grpc"
 	"github.com/example/qianchuan-saas/models"
 	"github.com/example/qianchuan-saas/qianchuan"
 	"github.com/example/qianchuan-saas/router"
@@ -35,6 +36,16 @@ func main() {
 
 	syncWorker := worker.NewSyncWorker(qc)
 	syncWorker.Start()
+
+	grpcClient, grpcErr := rpc.NewClient("localhost:50051")
+	if grpcErr != nil {
+		log.Printf("WARNING: gRPC strategy service not available: %v", grpcErr)
+	} else {
+		ruleWorker := worker.NewRuleWorker(qc, grpcClient)
+		ruleWorker.Start()
+		aiWorker := worker.NewAIWorker(grpcClient)
+		aiWorker.Start()
+	}
 
 	r := router.Setup(qc)
 

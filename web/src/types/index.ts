@@ -70,3 +70,57 @@ export interface DailySummary {
   conversions: number
   roi: number
 }
+
+export interface Rule {
+  id: number
+  name: string
+  description: string
+  account_id: number
+  scope_json: Record<string, unknown>
+  condition_json: Record<string, unknown>
+  action_json: Record<string, unknown>
+  schedule: string
+  cooldown: string
+  enabled: boolean
+  created_at: string
+}
+
+export interface RuleExecution {
+  id: number
+  rule_id: number
+  uni_ad_id: number
+  triggered_at: string
+  condition_json: Record<string, unknown>
+  action_json: Record<string, unknown>
+  status: string
+  result_json: Record<string, unknown>
+  executed_at: string | null
+}
+
+export interface Creative {
+  id: number
+  account_id: number
+  name: string
+  type: string
+  url: string
+  file_size: number
+  duration: number
+  tags: Record<string, unknown>
+  metrics_json: Record<string, unknown>
+  created_at: string
+}
+
+export interface AIRecommendation {
+  id: number
+  uni_ad_id: number | null
+  type: string
+  title: string
+  description: string
+  metrics_json: Record<string, unknown>
+  confidence: number
+  suggested_action: Record<string, unknown>
+  status: string
+  reviewed_by: number | null
+  reviewed_at: string | null
+  created_at: string
+}

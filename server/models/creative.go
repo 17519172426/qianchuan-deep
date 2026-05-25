@@ -21,32 +21,6 @@ type UniAdCreative struct {
 	IsBlocked  bool `gorm:"default:false" json:"is_blocked"`
 }
 
-type Rule struct {
-	ID            uint      `gorm:"primaryKey" json:"id"`
-	Name          string    `gorm:"size:100;not null" json:"name"`
-	Description   string    `gorm:"type:text;default:''" json:"description"`
-	AccountID     uint      `gorm:"index" json:"account_id"`
-	ScopeJSON     JSONMap   `gorm:"type:jsonb;default:'{}'" json:"scope_json"`
-	ConditionJSON JSONMap   `gorm:"type:jsonb;not null;default:'{}'" json:"condition_json"`
-	ActionJSON    JSONMap   `gorm:"type:jsonb;not null;default:'{}'" json:"action_json"`
-	Schedule      string    `gorm:"size:50;default:*/5 * * * *" json:"schedule"`
-	Cooldown      string    `gorm:"size:20;default:1h" json:"cooldown"`
-	Enabled       bool      `gorm:"default:false" json:"enabled"`
-	CreatedAt     time.Time `json:"created_at"`
-}
-
-type RuleExecution struct {
-	ID            uint       `gorm:"primaryKey" json:"id"`
-	RuleID        uint       `json:"rule_id"`
-	UniAdID       uint       `json:"uni_ad_id"`
-	TriggeredAt   *time.Time `json:"triggered_at"`
-	ConditionJSON JSONMap    `gorm:"type:jsonb;default:'{}'" json:"condition_json"`
-	ActionJSON    JSONMap    `gorm:"type:jsonb;default:'{}'" json:"action_json"`
-	Status        string     `gorm:"size:20;default:pending" json:"status"`
-	ResultJSON    JSONMap    `gorm:"type:jsonb;default:'{}'" json:"result_json"`
-	ExecutedAt    *time.Time `json:"executed_at"`
-}
-
 type AIRecommendation struct {
 	ID              uint       `gorm:"primaryKey" json:"id"`
 	UniAdID         *uint      `json:"uni_ad_id"`
