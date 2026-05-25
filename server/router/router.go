@@ -12,7 +12,7 @@ func Setup(qc *qianchuan.Client) *gin.Engine {
 	r := gin.Default()
 
 	r.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"http://localhost:5173"},
+		AllowOrigins:     []string{"http://localhost:5173", "http://127.0.0.1:5173"},
 		AllowMethods:     []string{"GET", "POST", "PUT", "PATCH", "DELETE"},
 		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"},
 		AllowCredentials: true,
@@ -34,6 +34,7 @@ func Setup(qc *qianchuan.Client) *gin.Engine {
 
 		authorized := api.Group("/", auth.AuthRequired())
 		{
+			authorized.GET("/accounts/auth-url", accountH.AuthURL)
 			authorized.GET("/accounts", accountH.List)
 			authorized.POST("/accounts", accountH.Create)
 			authorized.GET("/accounts/:id", accountH.Get)

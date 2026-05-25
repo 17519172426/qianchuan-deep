@@ -16,4 +16,5 @@ type UniAdReport struct {
 	ECPM        float64   `gorm:"type:decimal(15,4);default:0" json:"ecpm"`
 	PayOrderCnt int       `gorm:"default:0" json:"pay_order_cnt"`
 	PayOrderAmt float64   `gorm:"type:decimal(15,2);default:0" json:"pay_order_amt"`
+	CreatedAt   time.Time `json:"created_at"`
 }

@@ -6,12 +6,15 @@ import Rules from './pages/Rules'
 import Recommendations from './pages/Recommendations'
 import Creatives from './pages/Creatives'
 import Reports from './pages/Reports'
+import Accounts from './pages/Accounts'
+import OAuthCallback from './pages/OAuthCallback'
 import Layout from './components/Layout'
 
 function App() {
   return (
     <Routes>
       <Route path="/login" element={<Login />} />
+      <Route path="/oauth/callback" element={<OAuthCallback />} />
       <Route element={<Layout />}>
         <Route path="/" element={<Navigate to="/dashboard" replace />} />
         <Route path="/dashboard" element={<Dashboard />} />
@@ -20,6 +23,7 @@ function App() {
         <Route path="/recommendations" element={<Recommendations />} />
         <Route path="/creatives" element={<Creatives />} />
         <Route path="/reports" element={<Reports />} />
+        <Route path="/accounts" element={<Accounts />} />
       </Route>
     </Routes>
   )

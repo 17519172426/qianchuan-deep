@@ -152,10 +152,87 @@ func (w *RuleWorker) evaluateAndExecute() {
 			execErr = w.QC.UpdateUniAdStatus(&accRef, []int64{*ad.QianchuanAdID}, "disable")
 		case "resume_ad":
 			execErr = w.QC.UpdateUniAdStatus(&accRef, []int64{*ad.QianchuanAdID}, "enable")
-		case "update_budget", "update_roi_goal", "raise_ad":
-			execStatus = "skipped"
-			log.Printf("action %s not yet implemented (rule=%d ad=%d value=%.2f)",
-				action.ActionType, action.RuleId, action.AdId, action.Value)
+		case "update_budget":
+			newBudget := action.Value
+			if action.ValueType == "percentage" {
+				currentBudget := float64(0)
+				if ad.DeliverySetting != nil {
+					if b, ok := ad.DeliverySetting["budget"].(float64); ok {
+						currentBudget = b
+					}
+				}
+				newBudget = currentBudget * (1 + action.Value)
+			}
+			req := &qianchuan.UpdateAdRequest{
+				AdvertiserID:    accRef.AdvertiserID,
+				AdID:            *ad.QianchuanAdID,
+				DeliverySetting: map[string]interface{}{"budget": newBudget},
+			}
+			execErr = w.QC.UpdateUniAd(&accRef, req)
+			if execErr == nil {
+				if ad.DeliverySetting == nil {
+					ad.DeliverySetting = models.JSONMap{}
+				}
+				ad.DeliverySetting["budget"] = newBudget
+				db.DB.Model(ad).Update("delivery_setting", ad.DeliverySetting)
+				execStatus = "success"
+			} else {
+				execStatus = "failed"
+			}
+		case "update_roi_goal":
+			newROI := action.Value
+			if action.ValueType == "percentage" {
+				currentROI := float64(0)
+				if ad.DeliverySetting != nil {
+					if r, ok := ad.DeliverySetting["roi_goal"].(float64); ok {
+						currentROI = r
+					}
+				}
+				newROI = currentROI * (1 + action.Value)
+			}
+			req := &qianchuan.UpdateAdRequest{
+				AdvertiserID:    accRef.AdvertiserID,
+				AdID:            *ad.QianchuanAdID,
+				DeliverySetting: map[string]interface{}{"roi_goal": newROI},
+			}
+			execErr = w.QC.UpdateUniAd(&accRef, req)
+			if execErr == nil {
+				if ad.DeliverySetting == nil {
+					ad.DeliverySetting = models.JSONMap{}
+				}
+				ad.DeliverySetting["roi_goal"] = newROI
+				db.DB.Model(ad).Update("delivery_setting", ad.DeliverySetting)
+				execStatus = "success"
+			} else {
+				execStatus = "failed"
+			}
+		case "raise_ad":
+			newBid := action.Value
+			if action.ValueType == "percentage" {
+				currentBid := float64(0)
+				if ad.DeliverySetting != nil {
+					if b, ok := ad.DeliverySetting["bid"].(float64); ok {
+						currentBid = b
+					}
+				}
+				newBid = currentBid * (1 + action.Value)
+			}
+			req := &qianchuan.UpdateAdRequest{
+				AdvertiserID:    accRef.AdvertiserID,
+				AdID:            *ad.QianchuanAdID,
+				DeliverySetting: map[string]interface{}{"bid": newBid},
+			}
+			execErr = w.QC.UpdateUniAd(&accRef, req)
+			if execErr == nil {
+				if ad.DeliverySetting == nil {
+					ad.DeliverySetting = models.JSONMap{}
+				}
+				ad.DeliverySetting["bid"] = newBid
+				db.DB.Model(ad).Update("delivery_setting", ad.DeliverySetting)
+				execStatus = "success"
+			} else {
+				execStatus = "failed"
+			}
 		case "notify":
 			log.Printf("notify action for rule %d ad %d", action.RuleId, action.AdId)
 		default:
@@ -198,6 +275,16 @@ func (w *RuleWorker) applySafetyLimits(action *pb.RuleAction) bool {
 		if action.Value < 300 {
 			return false
 		}
+	case "update_roi_goal":
+		if action.ValueType == "percentage" {
+			return action.Value >= -0.5 && action.Value <= 0.5
+		}
+		return action.Value > 0.01 && action.Value < 100
+	case "raise_ad":
+		if action.ValueType == "percentage" {
+			return action.Value >= -0.3 && action.Value <= 1.0
+		}
+		return action.Value > 0
 	case "pause_ad", "resume_ad", "notify":
 		return true
 	}
