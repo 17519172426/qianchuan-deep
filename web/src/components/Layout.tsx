@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Outlet, useNavigate, useLocation } from 'react-router-dom'
 import { Layout as AntLayout, Menu, Button, Typography } from 'antd'
 import {
@@ -9,11 +9,13 @@ import {
   PictureOutlined,
   BarChartOutlined,
   LogoutOutlined,
+  UserOutlined,
 } from '@ant-design/icons'
 
 const { Header, Sider, Content } = AntLayout
 
 const menuItems = [
+  { key: '/accounts', icon: <UserOutlined />, label: '账户管理' },
   { key: '/dashboard', icon: <DashboardOutlined />, label: '首页看板' },
   { key: '/ads', icon: <UnorderedListOutlined />, label: '全域计划' },
   { key: '/rules', icon: <SettingOutlined />, label: '规则管理' },
@@ -28,8 +30,13 @@ export default function Layout() {
   const token = localStorage.getItem('token')
   const [collapsed, setCollapsed] = useState(false)
 
+  useEffect(() => {
+    if (!token) {
+      navigate('/login')
+    }
+  }, [token, navigate])
+
   if (!token) {
-    navigate('/login')
     return null
   }
 

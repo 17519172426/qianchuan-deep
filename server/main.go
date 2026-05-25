@@ -30,6 +30,7 @@ func main() {
 		&models.AIRecommendation{},
 		&models.UniAdReport{},
 	)
+	db.DB.Exec("CREATE UNIQUE INDEX IF NOT EXISTS idx_uni_ad_reports_uniq ON uni_ad_reports (uni_ad_id, report_date, report_hour)")
 	log.Println("database connected and migrated")
 
 	qc := qianchuan.NewClient(cfg.QianchuanAppID, cfg.QianchuanSecret)

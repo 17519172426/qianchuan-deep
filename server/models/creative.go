@@ -3,9 +3,10 @@ package models
 import "time"
 
 type Creative struct {
-	ID          uint      `gorm:"primaryKey" json:"id"`
-	AccountID   uint      `gorm:"index;not null" json:"account_id"`
-	Name        string    `gorm:"size:255;not null" json:"name"`
+	ID                   uint      `gorm:"primaryKey" json:"id"`
+	AccountID            uint      `gorm:"index;not null" json:"account_id"`
+	QianchuanCreativeID  *int64    `gorm:"index" json:"qianchuan_creative_id"`
+	Name                 string    `gorm:"size:255;not null" json:"name"`
 	Type        string    `gorm:"size:20;not null" json:"type"`
 	URL         string    `gorm:"type:text;not null" json:"url"`
 	FileSize    int64     `gorm:"default:0" json:"file_size"`

@@ -70,3 +70,15 @@ func (h *AccountHandler) Delete(c *gin.Context) {
 	}
 	c.JSON(http.StatusNoContent, nil)
 }
+
+func (h *AccountHandler) AuthURL(c *gin.Context) {
+	redirectURI := c.Query("redirect_uri")
+	if redirectURI == "" {
+		redirectURI = "http://localhost:5173/oauth/callback"
+	}
+	authURL := "https://ad.oceanengine.com/open_api/oauth2/authorize/" +
+		"?app_id=" + h.QC.OAuth.AppID +
+		"&redirect_uri=" + redirectURI +
+		"&scope=ad_management"
+	c.JSON(http.StatusOK, gin.H{"url": authURL})
+}
